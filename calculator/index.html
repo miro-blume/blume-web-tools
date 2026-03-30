@@ -197,11 +197,19 @@
     }
 
     /* Result */
+    .result-card {
+      background: #f2f2f0;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
     .result-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
       width: 100%;
       text-align: center;
     }
@@ -221,6 +229,14 @@
       color: #14301a;
       line-height: normal;
       letter-spacing: -1px;
+    }
+
+    .result-sublabel {
+      font-family: 'PPNeueMontreal', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #19301e;
+      line-height: 1.3;
     }
 
     /* CTA */
@@ -313,9 +329,12 @@
     </div>
   </div>
 
-  <div class="result-section">
-    <div class="result-label">With Blume you could lose</div>
-    <div class="result-value" id="resultValue">20.6kg</div>
+  <div class="result-card">
+    <div class="result-section">
+      <div class="result-label">SURMOUNT-1 trial average</div>
+      <div class="result-value" id="resultValue">20.6kg</div>
+      <div class="result-sublabel" id="resultSublabel">lost by participants starting at ~95 kg, over 72 weeks</div>
+    </div>
   </div>
 
   <a class="cta-button" href="https://www.blumehealth.com/redirect/start-now" target="_top">Is treatment right for me?</a>
@@ -343,6 +362,7 @@
   const weightFloat = document.getElementById('weightFloat');
   const weightValue = document.getElementById('weightValue');
   const resultValue = document.getElementById('resultValue');
+  const resultSublabel = document.getElementById('resultSublabel');
   const togglePill  = document.getElementById('togglePill');
 
   function kgToStLb(kg) {
@@ -375,6 +395,9 @@
 
     weightValue.textContent = formatWeight(currentKg);
     resultValue.textContent = formatLoss(currentKg);
+    resultSublabel.textContent = currentUnit === 'st'
+      ? `lost by participants starting at ~${Math.round(currentKg / 6.35029)}st, over 72 weeks`
+      : `lost by participants starting at ~${currentKg} kg, over 72 weeks`;
 
     handle.setAttribute('aria-valuenow', currentKg);
     handle.setAttribute('aria-valuetext', formatWeight(currentKg));
