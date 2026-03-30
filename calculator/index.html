@@ -452,6 +452,15 @@
 
   requestAnimationFrame(() => render());
   window.addEventListener('resize', render);
+
+  // Responsive height for iframe embeds
+  function postHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ type: 'blume-calc-height', height }, '*');
+  }
+  const resizeObserver = new ResizeObserver(postHeight);
+  resizeObserver.observe(document.body);
+  postHeight();
 </script>
 
 </body>
