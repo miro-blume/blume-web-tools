@@ -1011,12 +1011,16 @@ calcBtn.addEventListener('click', () => {
     months_to_target: months,
   });
 
-  // Mixpanel — no PII
+  // Mixpanel
+  const _email = emailInput.value.trim();
+  mixpanel.identify(_email);
+  mixpanel.people.set({ '$email': _email });
   mixpanel.track('BMI Calculator Submitted', Object.assign({
     bmi_category:    cat.label,
     months_to_target: months,
     unit:            useMetric ? 'metric' : 'imperial',
     eligible:        bmi >= 25,
+    $email:          _email,
   }, getUrlParams()));
 
   showResults();
