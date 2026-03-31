@@ -790,6 +790,78 @@
 </div>
 
 <script>
+// ── Localisation ──
+const isDE = (function() {
+  const url = window.location.href;
+  const ref = document.referrer;
+  return /\/de\/|\/de$|\?.*locale=de|&locale=de/.test(url) ||
+         /\/de\/|\/de$/.test(ref);
+})();
+
+const T = isDE ? {
+  heading:          'Berechne, wann du dein Zielgewicht erreichen kannst',
+  labelHeight:      'Größe',
+  labelWeight:      'Gewicht',
+  labelTarget:      'Zielgewicht',
+  labelEmail:       'E-Mail',
+  placeholder_email:'beispiel@email.de',
+  unitToggleToImp:  'In Pfund wechseln',
+  unitToggleToMet:  'In Metrisch wechseln',
+  resultTitle:      'Potenzielle Gewichtsabnahme',
+  timeLabel:        'Geschätzte Zeit bis zum Ziel',
+  lockText:         'Gib deine Daten\nein, um es zu sehen',
+  ctaHeading:       'Bereit loszulegen?',
+  ctaBody:          'Finde in nur 5 Minuten heraus, ob du für das Programm geeignet bist, indem du das Online-Gesundheitsscreening ausfüllst.',
+  ctaBtn:           'Eignung prüfen',
+  disclaimer:       'Basierend auf einer klinischen Studie aus dem Jahr 2022, veröffentlicht im New England Journal of Medicine (Jastreboff et al., 2022).',
+  cardBmi:          'Aktueller BMI',
+  cardTarget:       'Zielgewicht',
+  resetBtn:         'Rechner zurücksetzen',
+  chartWeight:      'Gewicht',
+  chartBmi:         'BMI',
+  moSuffix:         'Mo.',
+  moreThan18:       '>18Mo.',
+  uwTitle:          'Dein BMI liegt im gesunden Bereich',
+  uwBody:           'Dein aktueller BMI liegt unter 25, was im Normalbereich liegt. Ein medizinisch überwachtes Abnehmprogramm wird in der Regel ab einem BMI von 25 oder höher empfohlen.',
+  adjustedNote:     'Angepasst auf minimalen gesunden BMI (18,5)',
+  errorTargetLow:   'Das Zielgewicht muss niedriger als dein aktuelles Gewicht sein.',
+  bmiUnderweight:   'untergewichtig',
+  bmiHealthy:       'gesund',
+  bmiOverweight:    'übergewichtig',
+  bmiObese:         'adipös',
+} : {
+  heading:          'Calculate when you can reach your target weight',
+  labelHeight:      'Height',
+  labelWeight:      'Weight',
+  labelTarget:      'Target Weight',
+  labelEmail:       'Email',
+  placeholder_email:'example@email.com',
+  unitToggleToImp:  'Change to Pounds',
+  unitToggleToMet:  'Change to Metric',
+  resultTitle:      'Potential weight loss',
+  timeLabel:        'Est. time till target',
+  lockText:         'Enter your\ndetails to see',
+  ctaHeading:       'Ready to start?',
+  ctaBody:          "Find out if you're eligible for the programme in just 5 minutes by completing the online health screening.",
+  ctaBtn:           'Check eligibility',
+  disclaimer:       'Based on a 2022 clinical study published in the New England Journal of Medicine (Jastreboff et al., 2022).',
+  cardBmi:          'Current BMI',
+  cardTarget:       'Target weight',
+  resetBtn:         'Reset Calculator',
+  chartWeight:      'Weight',
+  chartBmi:         'BMI',
+  moSuffix:         'mo.',
+  moreThan18:       '>18mo.',
+  uwTitle:          'Your BMI is in the healthy range',
+  uwBody:           'Your current BMI is below 25, which is within the normal range. A medically supervised weight loss programme is typically recommended for a BMI of 25 or above.',
+  adjustedNote:     'Adjusted to minimum healthy BMI (18.5)',
+  errorTargetLow:   'Target weight must be lower than your current weight.',
+  bmiUnderweight:   'underweight',
+  bmiHealthy:       'healthy',
+  bmiOverweight:    'overweight',
+  bmiObese:         'obese',
+};
+
 // ── SURMOUNT-1 / Mounjaro (tirzepatide 15mg) trial data ──
 // Cumulative % body weight lost at each month, derived from Jastreboff et al. 2022
 const MONTHLY_PCT = [
@@ -844,6 +916,34 @@ const tooltipDot   = document.getElementById('tooltipDot');
 const chartModeBtn = document.getElementById('chartModeBtn');
 const chartModeLbl = document.getElementById('chartModeLabel');
 
+// ── Apply translations ──
+document.querySelector('.heading').textContent                             = T.heading;
+document.getElementById('heightLabel').textContent                        = T.labelHeight;
+document.getElementById('weightLabel').textContent                        = T.labelWeight;
+document.querySelector('label.field-label:nth-of-type(3)')  // Target Weight label via text match
+  || Array.from(document.querySelectorAll('.field-label')).find(el => el.textContent.trim() === 'Target Weight' || el.textContent.trim() === 'Zielgewicht');
+Array.from(document.querySelectorAll('.field-label')).forEach(el => {
+  if (el.textContent.trim() === 'Target Weight') el.textContent = T.labelTarget;
+  if (el.textContent.trim() === 'Email')         el.textContent = T.labelEmail;
+});
+document.getElementById('emailInput').placeholder                         = T.placeholder_email;
+document.getElementById('unitToggle').textContent                         = T.unitToggleToImp;
+document.querySelector('.result-title').textContent                       = T.resultTitle;
+document.querySelector('.time-label').textContent                         = T.timeLabel;
+document.querySelector('.lock-text').innerHTML                            = T.lockText.replace('\n', '<br>');
+document.querySelector('.cta-heading').textContent                        = T.ctaHeading;
+document.querySelector('.cta-body').textContent                           = T.ctaBody;
+document.querySelector('.btn-eligibility').textContent                    = T.ctaBtn;
+document.querySelector('.disclaimer-text').textContent                    = T.disclaimer;
+document.querySelector('.summary-card-label').textContent                 = T.cardBmi;
+document.querySelectorAll('.summary-card-label')[1].textContent           = T.cardTarget;
+document.querySelector('.reset-label').textContent                        = T.resetBtn;
+document.getElementById('chartModeLabel').textContent                     = T.chartWeight;
+document.querySelector('.dropdown-option[data-value="weight"]').childNodes[1].textContent = ' ' + T.chartWeight;
+document.querySelector('.dropdown-option[data-value="bmi"]').childNodes[1].textContent    = ' ' + T.chartBmi;
+document.querySelector('.uw-title').textContent                           = T.uwTitle;
+document.querySelector('.uw-body').textContent                            = T.uwBody;
+
 // ── Helpers ──
 const cmToIn = cm => cm / 2.54;
 const inToCm = i  => i * 2.54;
@@ -856,10 +956,10 @@ function calcBMI(heightCm, weightKg) {
 }
 
 function bmiInfo(bmi) {
-  if (bmi < 18.5) return { label: 'underweight', cls: 'underweight' };
-  if (bmi < 25)   return { label: 'healthy',     cls: 'normal' };
-  if (bmi < 30)   return { label: 'overweight',  cls: 'overweight' };
-  return               { label: 'obese',        cls: 'obese' };
+  if (bmi < 18.5) return { label: T.bmiUnderweight, cls: 'underweight' };
+  if (bmi < 25)   return { label: T.bmiHealthy,     cls: 'normal' };
+  if (bmi < 30)   return { label: T.bmiOverweight,  cls: 'overweight' };
+  return               { label: T.bmiObese,        cls: 'obese' };
 }
 
 function projectWeights(startKg) {
@@ -897,7 +997,7 @@ function submitToWebhook(data) {
 unitToggle.addEventListener('click', () => {
   useMetric = !useMetric;
   if (useMetric) {
-    unitToggle.textContent = 'Change to Pounds';
+    unitToggle.textContent = T.unitToggleToImp;
     document.getElementById('heightUnit').textContent = 'cm';
     document.getElementById('weightUnit').textContent = 'kg';
     document.getElementById('targetUnit').textContent = 'kg';
@@ -905,7 +1005,7 @@ unitToggle.addEventListener('click', () => {
     if (weightInput.value) weightInput.value = Math.round(lbsToKg(parseFloat(weightInput.value)) * 10) / 10;
     if (targetInput.value) targetInput.value = Math.round(lbsToKg(parseFloat(targetInput.value)) * 10) / 10;
   } else {
-    unitToggle.textContent = 'Change to Metric';
+    unitToggle.textContent = T.unitToggleToMet;
     document.getElementById('heightUnit').textContent = 'in';
     document.getElementById('weightUnit').textContent = 'lbs';
     document.getElementById('targetUnit').textContent = 'lbs';
@@ -931,7 +1031,7 @@ chartDropdown.querySelectorAll('.dropdown-option').forEach(opt => {
     const val = opt.dataset.value;
     if (val === chartMode) { chartDropdown.classList.remove('open'); return; }
     chartMode = val;
-    chartModeLbl.textContent = val === 'weight' ? 'Weight' : 'BMI';
+    chartModeLbl.textContent = val === 'weight' ? T.chartWeight : T.chartBmi;
     chartDropdown.querySelectorAll('.dropdown-option').forEach(o => o.classList.toggle('selected', o.dataset.value === val));
     chartDropdown.classList.remove('open');
     if (calc) drawChart();
@@ -961,7 +1061,7 @@ function validate() {
   if (!t || t <= 0) { targetInput.classList.add('error'); ok = false; }
   if (t >= w) {
     targetInput.classList.add('error');
-    showFormError('Target weight must be lower than your current weight.');
+    showFormError(T.errorTargetLow);
     ok = false;
   }
   if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { emailInput.classList.add('error'); ok = false; }
@@ -1052,7 +1152,7 @@ function showResults() {
     const note = document.createElement('p');
     note.className = 'target-note';
     note.style.cssText = 'font-size:11px;line-height:1.3;color:rgba(20,48,26,0.55);margin-top:-16px;font-family:PPNeueMontreal,sans-serif;';
-    note.textContent = 'Adjusted to minimum healthy BMI (18.5)';
+    note.textContent = T.adjustedNote;
     targetCard.appendChild(note);
   }
 
@@ -1078,7 +1178,7 @@ function showResults() {
     document.querySelector('.time-estimate').classList.remove('hidden');
     chartContainer.classList.remove('chart-blurred');
     ctaSection.classList.remove('hidden');
-    timeValueEl.textContent = months ? months + 'mo.' : '>18mo.';
+    timeValueEl.textContent = months ? months + T.moSuffix : T.moreThan18;
     updateAxis();
     drawChart();
   }
@@ -1091,7 +1191,7 @@ resetBtn.addEventListener('click', () => {
   lockOverlay.classList.remove('hidden');
   chartContainer.classList.add('chart-blurred');
   ctaSection.classList.add('hidden');
-  timeValueEl.textContent = '--mo.';
+  timeValueEl.textContent = '--' + T.moSuffix;
   document.getElementById('underweightWarning').classList.add('hidden');
   document.querySelector('.chart-canvas-wrap').classList.remove('hidden');
   ticksCanvas.classList.remove('hidden');
@@ -1099,7 +1199,7 @@ resetBtn.addEventListener('click', () => {
   document.querySelector('.time-estimate').classList.remove('hidden');
   calc = null;
   chartMode = 'weight';
-  chartModeLbl.textContent = 'Weight';
+  chartModeLbl.textContent = T.chartWeight;
   chartDropdown.querySelectorAll('.dropdown-option').forEach(o => o.classList.toggle('selected', o.dataset.value === 'weight'));
   chartDropdown.classList.remove('open');
   hideTooltip();
