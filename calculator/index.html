@@ -985,7 +985,8 @@ function getUrlParams() {
 function submitToWebhook(data) {
   if (!WEBHOOK_URL) return;
   const urlParams = getUrlParams();
-  const payload = Object.assign({}, data, { url_params: urlParams, page_url: window.location.href, timestamp: new Date().toISOString() });
+  const language = isDE ? 'German - DE' : 'English - EN';
+  const payload = Object.assign({}, data, { language, url_params: urlParams, page_url: window.location.href, timestamp: new Date().toISOString() });
   fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
