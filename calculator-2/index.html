@@ -239,7 +239,7 @@
 
     /* ── Buttons ── */
     .btn-primary {
-      background: #68ec87;
+      background: #14301a;
       border: none;
       border-radius: 100px;
       padding: 16px 36px;
@@ -248,7 +248,7 @@
       font-size: 16px;
       line-height: 1.3;
       letter-spacing: 0.32px;
-      color: #14301a;
+      color: #ffffff;
       cursor: pointer;
       transition: background 0.15s;
       text-decoration: none;
@@ -256,7 +256,9 @@
       align-items: center;
       justify-content: center;
     }
-    .btn-primary:hover { background: #55e075; }
+    .btn-primary:hover { background: #1e4a27; }
+    .btn-primary.btn-green { background: #68ec87; color: #14301a; }
+    .btn-primary.btn-green:hover { background: #55e075; }
     .btn-primary.full-width { width: 100%; }
 
     .unit-toggle-link {
@@ -971,7 +973,7 @@
 
           <div class="cta-row" id="ctaRow">
             <p class="cta-row-text" id="ctaText">Is treatment right for you? Find out in 5 minutes.</p>
-            <a class="btn-primary" id="ctaBtn" href="https://www.blumehealth.com/redirect/start-now" target="_top">Start eligibility check</a>
+            <a class="btn-primary btn-green" id="ctaBtn" href="https://www.blumehealth.com/redirect/start-now" target="_top">Start eligibility check</a>
           </div>
         </div>
         <div class="col-divider"></div>
