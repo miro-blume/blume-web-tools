@@ -801,6 +801,13 @@ const isDE = (function() {
          /\/de\/|\/de$/.test(ref);
 })();
 
+const isUK = (function() {
+  const url = window.location.href;
+  const ref = document.referrer;
+  return /\/en-gb\/|\/en-gb$|\?.*locale=en-gb|&locale=en-gb/i.test(url) ||
+         /\/en-gb\/|\/en-gb$/i.test(ref);
+})();
+
 const T = isDE ? {
   heading:          'Berechne, wann du dein Zielgewicht erreichen kannst',
   labelHeight:      'Größe',
@@ -893,7 +900,7 @@ const MONTHLY_PCT = [
 const WEBHOOK_URL = 'https://hook.eu2.make.com/e4ei5hjm62oa44mzsfy4d44eyxv1knnl';
 
 // ── State ──
-let useMetric  = true;
+let useMetric  = !isUK; // UK defaults to imperial
 let calc       = null;
 let chartMode  = 'weight'; // 'weight' | 'bmi'
 
@@ -946,6 +953,14 @@ document.querySelector('.dropdown-option[data-value="weight"]').childNodes[1].te
 document.querySelector('.dropdown-option[data-value="bmi"]').childNodes[1].textContent    = ' ' + T.chartBmi;
 document.querySelector('.uw-title').textContent                           = T.uwTitle;
 document.querySelector('.uw-body').textContent                            = T.uwBody;
+
+// ── UK imperial default ──
+if (isUK) {
+  document.getElementById('unitToggle').textContent       = T.unitToggleToMet;
+  document.getElementById('heightUnit').textContent       = 'in';
+  document.getElementById('weightUnit').textContent       = 'lbs';
+  document.getElementById('targetUnit').textContent       = 'lbs';
+}
 
 // ── Helpers ──
 const cmToIn = cm => cm / 2.54;
